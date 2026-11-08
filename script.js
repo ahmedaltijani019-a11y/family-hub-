@@ -1,4 +1,3 @@
-
 // ======================================
 // 1. إعدادات الموقع والبيانات
 // ======================================
@@ -42,9 +41,7 @@ function createId() {
     if (crypto.randomUUID) {
         return crypto.randomUUID();
     }
-
-    return Date.now().toString(36) +
-        Math.random().toString(36).slice(2);
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
 
 // تحميل المهام القديمة مع دعم البيانات السابقة
@@ -73,9 +70,7 @@ if (!familyScores || typeof familyScores !== "object" || Array.isArray(familySco
 
 FAMILY_MEMBERS.forEach(user => {
     const score = Number(familyScores[user]);
-    familyScores[user] = Number.isFinite(score)
-        ? Math.max(0, score)
-        : 0;
+    familyScores[user] = Number.isFinite(score) ? Math.max(0, score) : 0;
 });
 
 saveStorage(STORAGE_KEYS.scores, familyScores);
@@ -162,13 +157,11 @@ function addTask() {
     };
 
     tasks.unshift(newTask);
-
     saveStorage(STORAGE_KEYS.tasks, tasks);
 
     input.value = "";
     renderTasks();
     updateDashboard();
-
     input.focus();
 }
 
@@ -186,11 +179,9 @@ function renderTasks() {
         if (currentFilter === "pending") {
             return !task.completed;
         }
-
         if (currentFilter === "completed") {
             return task.completed;
         }
-
         return true;
     });
 
@@ -244,8 +235,7 @@ function renderTasks() {
         list.appendChild(item);
     });
 
-    document.getElementById("taskCount").textContent =
-        filteredTasks.length + " مهمة";
+    document.getElementById("taskCount").textContent = filteredTasks.length + " مهمة";
 }
 
 // ======================================
@@ -296,13 +286,12 @@ function deleteTask(id) {
 
     if (!confirmed) return;
 
-    // النقاط المكتسبة سابقاً تبقى محفوظة
     tasks = tasks.filter(item => item.id !== id);
-
     saveStorage(STORAGE_KEYS.tasks, tasks);
 
     renderTasks();
     updateDashboard();
+    updateLeaderboard();
 }
 
 // ======================================
@@ -311,14 +300,10 @@ function deleteTask(id) {
 
 function updateDashboard() {
     const total = tasks.length;
-
     const completed = tasks.filter(task => task.completed).length;
-
     const remaining = total - completed;
 
-    const percentage = total === 0
-        ? 0
-        : Math.round((completed / total) * 100);
+    const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
     const totalPoints = Object.values(familyScores)
         .reduce((sum, points) => sum + points, 0);
@@ -328,11 +313,8 @@ function updateDashboard() {
     document.getElementById("remainingTasks").textContent = remaining;
     document.getElementById("totalPoints").textContent = totalPoints;
 
-    document.getElementById("progressText").textContent =
-        percentage + "%";
-
-    document.getElementById("progressBar").style.width =
-        percentage + "%";
+    document.getElementById("progressText").textContent = percentage + "%";
+    document.getElementById("progressBar").style.width = percentage + "%";
 
     let message = "لنبدأ بإنجاز مهامنا اليوم!";
 
@@ -353,7 +335,6 @@ function updateDashboard() {
 
 function updateLeaderboard() {
     const leaderboard = document.getElementById("leaderboard");
-
     leaderboard.replaceChildren();
 
     const sortedMembers = FAMILY_MEMBERS
@@ -370,13 +351,7 @@ function updateLeaderboard() {
         const rank = document.createElement("span");
         rank.className = "leader-rank";
 
-        rank.textContent = index === 0
-            ? "🥇"
-            : index === 1
-                ? "🥈"
-                : index === 2
-                    ? "🥉"
-                    : index + 1;
+        rank.textContent = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : index + 1;
 
         const name = document.createElement("span");
         name.className = "leader-name";
@@ -397,11 +372,9 @@ function updateLeaderboard() {
 
 function initializeTheme() {
     const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
-
     const darkMode = savedTheme === "dark";
 
     document.body.classList.toggle("dark-theme", darkMode);
-
     updateThemeButton(darkMode);
 }
 
@@ -417,9 +390,6 @@ function toggleDarkMode() {
 }
 
 function updateThemeButton(isDark) {
-    document.getElementById("themeIcon").textContent =
-        isDark ? "☀️" : "🌙";
-
-    document.getElementById("themeLabel").textContent =
-        isDark ? "الوضع النهاري" : "الوضع الليلي";
+    document.getElementById("themeIcon").textContent = isDark ? "☀️" : "🌙";
+    document.getElementById("themeLabel").textContent = isDark ? "الوضع النهاري" : "الوضع الليلي";
 }
